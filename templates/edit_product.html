@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="change">数量:</label>
+        <input type="number" name="change" value="{{ log.change }}" required><br>
+    
+        <label for="notes">備考:</label>
+        <input type="text" name="notes" value="{{ log.notes }}"><br>
+    
+        <button type="submit">更新</button>
+    </form>
+    <a href="{{ url_for('transaction_history') }}">戻る</a>
+    
+</body>
+</html>

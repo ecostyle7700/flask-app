@@ -108,6 +108,63 @@ def transaction_history():
 
     return render_template('transaction_history.html', logs=logs)
 
+@app.route('/product/edit/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        category = request.form['category']
+        unit_price = request.form['unit_price']
+
+        cursor.execute(
+            "UPDATE products SET name = ?, category = ?, unit_price = ? WHERE id = ?",
+            (name, category, unit_price, product_id)
+        )
+        conn.commit()
+        conn.close()
+        return redirect(url_for('products'))
+
+    cursor.execute("SELECT * FROM products WHERE id = ?", (product_id,))
+    product = cursor.fetchone()
+    conn.close()
+
+    return render_template('edit_product.html', product=product)
+
+@app.route('/transaction/edit/<int:log_id>', methods=['GET', 'POST'])
+def edit_transaction(log_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        change = request.form['change']
+        notes = request.form['notes']
+
+        cursor.execute(
+            "UPDATE inventory_log SET change = ?, notes = ? WHERE id = ?",
+            (change, notes, log_id)
+        )
+        conn.commit()
+        conn.close()
+        return redirect(url_for('transaction_history'))
+
+    cursor.execute("SELECT * FROM inventory_log WHERE id = ?", (log_id,))
+    log = cursor.fetchone()
+    conn.close()
+
+    return render_template('edit_transaction.html', log=log)
+
+@app.route('/transaction/delete/<int:log_id>', methods=['POST'])
+def delete_transaction(log_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM inventory_log WHERE id = ?", (log_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('transaction_history'))
+
+
 @app.route('/stock')
 def stock():
     """在庫一覧を表示"""
