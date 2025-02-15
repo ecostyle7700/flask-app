@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h2>商品登録</h2>
+<form method="POST">
+    <label>商品名: <input type="text" name="name" required></label><br>
+    <label>商品説明: <input type="text" name="description"></label><br>
+    <label>カテゴリー: <input type="text" name="category" required></label><br>
+    <label>単価: <input type="number" name="unit_price" step="0.01" required></label><br>
+    <button type="submit">登録</button>
+</form>
+   <a href="{{ url_for('home') }}">ホーム画面へ戻る</a>
+</body>
+</html>

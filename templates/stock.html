@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在庫一覧</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>在庫一覧</h1>
+    <table>
+        <tr>
+            <th>商品ID</th>
+            <th>商品名</th>
+            <th>在庫数</th>
+            <th>最終更新日</th>
+        </tr>
+        {% for stock in stocks %}
+        <tr>
+            <td>{{ stock.id }}</td>
+            <td>{{ stock.name }}</td>
+            <td>{{ stock.quantity }}</td>
+            <td>{{ stock.updated_at }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for('home') }}">ホーム画面へ戻る</a>
+    <a href="{{ url_for('transaction') }}">入出庫管理へ</a>
+</body>
+</html>

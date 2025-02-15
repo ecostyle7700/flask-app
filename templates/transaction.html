@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入出庫処理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+        }
+        label {
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>入出庫処理</h1>
+    <form method="POST">
+        <label for="product_id">商品:</label>
+        <select id="product_id" name="product_id" required>
+            {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="action">入庫 or 出庫:</label>
+        <select id="action" name="action" required>
+            <option value="入庫">入庫</option>
+            <option value="出庫">出庫</option>
+        </select>
+
+        <label for="change">個数:</label>
+        <input type="number" id="change" name="change" required min="1">
+
+        <label for="notes">備考:</label>
+        <input type="text" id="notes" name="notes">
+
+        <button type="submit">登録</button>
+    </form>
+
+    <a href="{{ url_for('home') }}">🏠 ホーム画面へ戻る</a>
+    <a href="{{ url_for('transaction_history') }}">📜 入出庫履歴を見る</a>
+</body>
+</html>

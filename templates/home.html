@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>喫茶店在庫管理アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>喫茶店在庫管理アプリ</h1>
+    <div class="button-container">
+        <a href="{{ url_for('add_product') }}" class="btn">商品登録</a>
+        <a href="{{ url_for('products') }}" class="btn">商品一覧</a>
+        <a href="{{ url_for('stock') }}" class="btn">在庫一覧</a>
+        <a href="{{ url_for('transaction') }}" class="btn">入出庫</a>
+        <a href="{{ url_for('transaction_history') }}" class="btn">入出庫履歴</a>
+    </div>
+</body>
+</html>
