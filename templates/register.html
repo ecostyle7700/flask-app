@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h1>ユーザー登録</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="username">名前:</label>
+        <input type="text" name="username" required><br>
+
+        <label for="password">パスワード:</label>
+        <input type="password" name="password" required><br>
+
+        <label for="role">役割:</label>
+        <select name="role" required>
+            <option value="admin">管理者</option>
+            <option value="member">メンバー</option>
+        </select><br>
+
+        <button type="submit">登録</button>
+    </form>
+
+    <a href="{{ url_for('login') }}">ログイン画面へ</a>
+</body>
+</html>

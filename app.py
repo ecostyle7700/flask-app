@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # セキュリティキーを設定
 db_path = "cafe_app.db"
 
 def get_db_connection():
@@ -9,6 +11,67 @@ def get_db_connection():
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """ユーザー登録ページ"""
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
+
+        if not username or not password or role not in ['admin', 'member']:
+            flash("すべての項目を正しく入力してください", "error")
+            return redirect(url_for('register'))
+
+        hashed_password = generate_password_hash(password)  # パスワードをハッシュ化
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+                           (username, hashed_password, role))  # ハッシュ化したパスワードを保存
+            conn.commit()
+            flash("ユーザー登録が完了しました", "success")
+        except sqlite3.IntegrityError:
+            flash("このユーザー名はすでに登録されています", "error")
+        finally:
+            conn.close()
+
+        return redirect(url_for('home'))
+
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """ログインページ"""
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, username, password, role FROM users WHERE username = ?", (username,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['role'] = user['role']
+            flash("ログインに成功しました", "success")
+            return redirect(url_for('home'))
+        else:
+            flash("ユーザー名またはパスワードが間違っています", "error")
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """ログアウト処理"""
+    session.clear()
+    flash("ログアウトしました", "success")
+    return redirect(url_for('login'))
 
 @app.route('/')
 def home():
