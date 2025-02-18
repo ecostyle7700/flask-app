@@ -1,6 +1,5 @@
 Flask
 gunicorn
 werkzeug
-sqlite3
 flask-wtf
 flask-login
