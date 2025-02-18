@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # セキュリティキーを設定
@@ -66,6 +67,16 @@ def login():
     
     return render_template('login.html')
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash("ログインが必要です", "error")
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @app.route('/logout')
 def logout():
     """ログアウト処理"""
@@ -79,6 +90,7 @@ def home():
     return render_template('home.html')
 
 @app.route('/product/add', methods=['GET', 'POST'])
+@login_required
 def add_product():
     """商品を登録する"""
     if request.method == 'POST':
@@ -147,6 +159,7 @@ def delete_product(product_id):
     return redirect(url_for('products'))
 
 @app.route('/transaction', methods=['GET', 'POST'])
+@login_required
 def transaction():
     """商品を入出庫する"""
     conn = get_db_connection()
@@ -159,7 +172,7 @@ def transaction():
     if request.method == 'POST':
         product_id = request.form['product_id']
         action = request.form['action']
-        change = int(request.form['quantity'])
+        change = int(request.form['change'])  # 'change' に修正
         notes = request.form.get('notes', '')
 
         # 入庫 or 出庫処理
